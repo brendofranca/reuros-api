@@ -9,6 +9,19 @@ import (
 	"strings"
 )
 
+// GetCurrencyRates godoc
+// @Summary Get currency conversion rate
+// @Description Get the conversion rate between two currencies
+// @Tags currency
+// @Accept  json
+// @Produce  json
+// @Param base path string true "Base currency code"
+// @Param target path string true "Target currency code"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /currency/{base}/{target} [get]
 func GetCurrencyRates(w http.ResponseWriter, r *http.Request) {
 	apiKey := os.Getenv("EXCHANGE_RATE_API_KEY")
 	if apiKey == "" {

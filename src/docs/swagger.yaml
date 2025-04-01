@@ -1,0 +1,49 @@
+info:
+  contact: {}
+paths:
+  /currency/{base}/{target}:
+    get:
+      consumes:
+      - application/json
+      description: Get the conversion rate between two currencies
+      parameters:
+      - description: Base currency code
+        in: path
+        name: base
+        required: true
+        type: string
+      - description: Target currency code
+        in: path
+        name: target
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get currency conversion rate
+      tags:
+      - currency
+swagger: "2.0"

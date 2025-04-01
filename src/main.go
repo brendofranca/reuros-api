@@ -9,6 +9,9 @@ import (
 	"os"
 	"os/signal"
 	"time"
+
+	_ "currency-api/docs"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func main() {
@@ -19,6 +22,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/currency/", handlers.GetCurrencyRates)
+	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	corsMiddleware := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
