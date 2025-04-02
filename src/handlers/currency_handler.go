@@ -57,9 +57,10 @@ func GetCurrencyRates(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := map[string]interface{}{
-		"base":   baseCurrency,
-		"target": targetCurrency,
-		"rate":   conversionRate,
+		"base":            baseCurrency,
+		"target":          targetCurrency,
+		"rate":            conversionRate,
+		"last_update_utc": rates.Date,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
