@@ -60,6 +60,13 @@ Swagger documentation is available at:
 http://localhost:8080/swagger/
 ```
 
+## Deployment
+
+The project is deployed using the infrastructure provided by [Railway](https://railway.app). You can access the services at the following URLs:
+
+- **Backend Swagger**: [https://currency-api-production-9e99.up.railway.app/swagger/index.html](https://currency-api-production-9e99.up.railway.app/swagger/index.html)
+- **UI**: [https://currency-app-production.up.railway.app/](https://currency-app-production.up.railway.app/)
+
 ## Project Structure
 
 - `src/handlers`: Contains HTTP handlers for API endpoints.
