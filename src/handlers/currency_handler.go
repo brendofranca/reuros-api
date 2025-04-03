@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -22,13 +21,7 @@ import (
 // @Failure 401 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /currency/{base}/{target} [get]
-func GetCurrencyRates(w http.ResponseWriter, r *http.Request) {
-	apiKey := os.Getenv("EXCHANGE_RATE_API_KEY")
-	if apiKey == "" {
-		http.Error(w, `{"error": "API key is missing"}`, http.StatusUnauthorized)
-		return
-	}
-
+func GetCurrencyRates(w http.ResponseWriter, r *http.Request, service *services.CurrencyService) {
 	pathParts := strings.Split(strings.TrimPrefix(r.URL.Path, "/currency/"), "/")
 	if len(pathParts) != 2 {
 		http.Error(w, `{"error": "Invalid URL format. Use /currency/{base}/{target}"}`, http.StatusBadRequest)
@@ -42,7 +35,6 @@ func GetCurrencyRates(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := services.NewCurrencyService(apiKey)
 	rates, err := service.FetchRates(baseCurrency)
 	if err != nil {
 		log.Printf("Failed to fetch currency rates: %v", err)

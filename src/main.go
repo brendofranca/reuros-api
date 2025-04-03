@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"currency-api/handlers"
+	"currency-api/services"
 	"errors"
 	"log"
 	"net/http"
@@ -20,8 +21,17 @@ func main() {
 		port = "8080"
 	}
 
+	apiKey := os.Getenv("EXCHANGE_RATE_API_KEY")
+	if apiKey == "" {
+		log.Fatal("EXCHANGE_RATE_API_KEY is not set")
+	}
+
+	currencyService := services.NewCurrencyService(apiKey)
+
 	mux := http.NewServeMux()
-	mux.HandleFunc("/currency/", handlers.GetCurrencyRates)
+	mux.HandleFunc("/currency/", func(w http.ResponseWriter, r *http.Request) {
+		handlers.GetCurrencyRates(w, r, currencyService)
+	})
 	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	corsMiddleware := func(next http.Handler) http.Handler {
