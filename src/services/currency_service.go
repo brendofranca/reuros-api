@@ -32,6 +32,7 @@ func (s *CurrencyService) FetchRates(baseCurrency string) (*models.CurrencyRate,
 		return cachedRates.(*models.CurrencyRate), nil
 	}
 
+	log.Println("Fetching rates", baseCurrency)
 	url := fmt.Sprintf("https://v6.exchangerate-api.com/v6/%s/latest/%s", s.APIKey, baseCurrency)
 
 	resp, err := http.Get(url)
@@ -58,7 +59,7 @@ func (s *CurrencyService) FetchRates(baseCurrency string) (*models.CurrencyRate,
 		return nil, errors.New("error: received empty exchange rates data")
 	}
 
-	s.Cache.Set(baseCurrency, &rates, cache.DefaultExpiration)
+	s.Cache.Set(baseCurrency, &rates, 10*time.Minute)
 
 	return &rates, nil
 }
