@@ -5,20 +5,33 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/patrickmn/go-cache"
+	_ "github.com/patrickmn/go-cache"
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
 
 type CurrencyService struct {
 	APIKey string
+	Cache  *cache.Cache
 }
 
 func NewCurrencyService(apiKey string) *CurrencyService {
-	return &CurrencyService{APIKey: apiKey}
+	return &CurrencyService{
+		APIKey: apiKey,
+		Cache:  cache.New(10*time.Minute, 15*time.Minute),
+	}
 }
 
 func (s *CurrencyService) FetchRates(baseCurrency string) (*models.CurrencyRate, error) {
+
+	if cachedRates, found := s.Cache.Get(baseCurrency); found {
+		log.Println("Cache hit for", baseCurrency)
+		return cachedRates.(*models.CurrencyRate), nil
+	}
+
 	url := fmt.Sprintf("https://v6.exchangerate-api.com/v6/%s/latest/%s", s.APIKey, baseCurrency)
 
 	resp, err := http.Get(url)
@@ -44,6 +57,8 @@ func (s *CurrencyService) FetchRates(baseCurrency string) (*models.CurrencyRate,
 	if rates.Rates == nil || len(rates.Rates) == 0 {
 		return nil, errors.New("error: received empty exchange rates data")
 	}
+
+	s.Cache.Set(baseCurrency, &rates, cache.DefaultExpiration)
 
 	return &rates, nil
 }
