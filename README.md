@@ -1,6 +1,6 @@
 # Currency API
 
-Currency API is a simple RESTful service that provides currency conversion rates between two currencies. It fetches exchange rates using the [ExchangeRate-API](https://www.exchangerate-api.com/).
+Currency API is a simple service that provides currency conversion rates between two currencies. It fetches exchange rates using the [ExchangeRate-API](https://www.exchangerate-api.com/).
 
 ## Features
 
