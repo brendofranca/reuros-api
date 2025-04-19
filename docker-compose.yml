@@ -1,4 +1,6 @@
-version: '3.8'
+networks:
+  default:
+    name: reuros-network
 services:
   app:
     build:
@@ -9,3 +11,43 @@ services:
     environment:
       - PORT=8080
       - EXCHANGE_RATE_API_KEY=${EXCHANGE_RATE_API_KEY}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - default      
+
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: cloudbeaver
+    ports:
+      - "8081:8978"
+    depends_on:
+      - postgres
+    volumes:
+      - cloudbeaver_data:/opt/cloudbeaver/workspace
+    restart: always
+    networks:
+      - default    
+
+volumes:
+  postgres_data:
+    driver: local
+  cloudbeaver_data:
+    driver: local

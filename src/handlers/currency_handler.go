@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"currency-api/services"
-	"encoding/json"
 	"log"
 	"net/http"
+	"reuros-api/services"
+	"reuros-api/utils"
 	"strings"
 )
 
@@ -24,27 +24,35 @@ import (
 func GetCurrencyRates(w http.ResponseWriter, r *http.Request, service *services.CurrencyService) {
 	pathParts := strings.Split(strings.TrimPrefix(r.URL.Path, "/currency/"), "/")
 	if len(pathParts) != 2 {
-		http.Error(w, `{"error": "Invalid URL format. Use /currency/{base}/{target}"}`, http.StatusBadRequest)
+		utils.WriteJSONResponse(w, http.StatusBadRequest, map[string]string{
+			"error": "Invalid URL format. Use /currency/{base}/{target}",
+		})
 		return
 	}
 	baseCurrency := strings.ToUpper(pathParts[0])
 	targetCurrency := strings.ToUpper(pathParts[1])
 
 	if len(baseCurrency) != 3 || len(targetCurrency) != 3 {
-		http.Error(w, `{"error": "Invalid currency format. Use 3-letter currency codes."}`, http.StatusBadRequest)
+		utils.WriteJSONResponse(w, http.StatusBadRequest, map[string]string{
+			"error": "Invalid currency format. Use 3-letter currency codes.",
+		})
 		return
 	}
 
 	rates, err := service.FetchRates(baseCurrency)
 	if err != nil {
 		log.Printf("Failed to fetch currency rates: %v", err)
-		http.Error(w, `{"error": "Failed to fetch currency rates"}`, http.StatusInternalServerError)
+		utils.WriteJSONResponse(w, http.StatusInternalServerError, map[string]string{
+			"error": "Failed to fetch currency rates",
+		})
 		return
 	}
 
 	conversionRate, exists := rates.Rates[targetCurrency]
 	if !exists {
-		http.Error(w, `{"error": "Target currency not found"}`, http.StatusNotFound)
+		utils.WriteJSONResponse(w, http.StatusNotFound, map[string]string{
+			"error": "Target currency not found",
+		})
 		return
 	}
 
@@ -55,10 +63,5 @@ func GetCurrencyRates(w http.ResponseWriter, r *http.Request, service *services.
 		"last_update_utc": rates.Date,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		log.Printf("Failed to encode response: %v", err)
-		http.Error(w, `{"error": "Failed to encode response"}`, http.StatusInternalServerError)
-	}
+	utils.WriteJSONResponse(w, http.StatusOK, response)
 }

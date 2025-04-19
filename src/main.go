@@ -2,16 +2,18 @@ package main
 
 import (
 	"context"
-	"currency-api/handlers"
-	"currency-api/services"
 	"errors"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"reuros-api/handlers"
+	"reuros-api/repositories"
+	"reuros-api/services"
 	"time"
 
-	_ "currency-api/docs"
+	_ "reuros-api/docs"
+
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -28,10 +30,18 @@ func main() {
 
 	currencyService := services.NewCurrencyService(apiKey)
 
+	db, err := services.NewDatabaseConnection()
+	if err != nil {
+		log.Fatal("Database connection error %v", err)
+	}
+
+	userRepo := repositories.NewUserRepository(db)
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/currency/", func(w http.ResponseWriter, r *http.Request) {
 		handlers.GetCurrencyRates(w, r, currencyService)
 	})
+	mux.HandleFunc("/users", handlers.CreateUserHandler(userRepo))
 	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	corsMiddleware := func(next http.Handler) http.Handler {

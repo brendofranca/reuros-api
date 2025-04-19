@@ -1,16 +1,16 @@
 package services
 
 import (
-	"currency-api/models"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/patrickmn/go-cache"
-	_ "github.com/patrickmn/go-cache"
 	"io"
 	"log"
 	"net/http"
+	"reuros-api/models"
 	"time"
+
+	"github.com/patrickmn/go-cache"
 )
 
 type CurrencyService struct {

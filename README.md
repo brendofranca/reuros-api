@@ -1,6 +1,6 @@
-# Currency API
+# Reuros API
 
-Currency API is a simple service that provides currency conversion rates between two currencies. It fetches exchange rates using the [ExchangeRate-API](https://www.exchangerate-api.com/).
+Reuros API is a simple service that provides currency conversion rates between two currencies. It fetches exchange rates using the [ExchangeRate-API](https://www.exchangerate-api.com/).
 
 ## Features
 
@@ -16,8 +16,8 @@ Currency API is a simple service that provides currency conversion rates between
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/currency-api.git
-   cd currency-api
+   git clone https://github.com/your-username/reuros-api.git
+   cd reuros-api
    ```
 
 2. Create a `.env` file in the root directory and add your ExchangeRate-API key:
