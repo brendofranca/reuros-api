@@ -1,37 +1,30 @@
 definitions:
-  models.UserModel:
+  users.UserRequest:
     properties:
-      created_at:
-        type: string
       email:
         type: string
-      id:
-        type: integer
       password:
         type: string
-      updated_at:
-        type: string
-      username:
-        type: string
-      uuid:
-        type: string
+    required:
+    - email
+    - password
     type: object
 info:
   contact: {}
 paths:
-  /currency/{base}/{target}:
+  /currency-rates:
     get:
       consumes:
       - application/json
       description: Get the conversion rate between two currencies
       parameters:
       - description: Base currency code
-        in: path
+        in: query
         name: base
         required: true
         type: string
       - description: Target currency code
-        in: path
+        in: query
         name: target
         required: true
         type: string
@@ -75,7 +68,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.UserModel'
+          $ref: '#/definitions/users.UserRequest'
       produces:
       - application/json
       responses:

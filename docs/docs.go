@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/currency/{base}/{target}": {
+        "/currency-rates": {
             "get": {
                 "description": "Get the conversion rate between two currencies",
                 "consumes": [
@@ -33,14 +33,14 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Base currency code",
                         "name": "base",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Target currency code",
                         "name": "target",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -102,7 +102,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.UserModel"
+                            "$ref": "#/definitions/users.UserRequest"
                         }
                     }
                 ],
@@ -137,28 +137,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.UserModel": {
+        "users.UserRequest": {
             "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "integer"
-                },
                 "password": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                },
-                "uuid": {
                     "type": "string"
                 }
             }

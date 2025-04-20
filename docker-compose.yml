@@ -1,6 +1,9 @@
+version: '3.8'
+
 networks:
   default:
     name: reuros-network
+
 services:
   app:
     build:
@@ -18,6 +21,8 @@ services:
       - DB_NAME=${DB_NAME}
     depends_on:
       - postgres
+    networks:
+      - default
 
   postgres:
     image: postgres:15
@@ -31,7 +36,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - default      
+      - default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   cloudbeaver:
     image: dbeaver/cloudbeaver:latest
@@ -39,12 +49,13 @@ services:
     ports:
       - "8081:8978"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
       - cloudbeaver_data:/opt/cloudbeaver/workspace
     restart: always
     networks:
-      - default    
+      - default
 
 volumes:
   postgres_data:
