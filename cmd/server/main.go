@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"reuros-api/internal/rates"
 	"reuros-api/internal/users"
-	"reuros-api/shared"
+	"reuros-api/internal/database"
 	"time"
 
 	_ "reuros-api/docs"
@@ -30,7 +30,7 @@ func main() {
 
 	currencyService := rates.NewCurrencyService(apiKey)
 
-	db, err := shared.NewDatabaseConnection()
+	db, err := database.NewDatabaseConnection()
 	if err != nil {
 		log.Fatalf("Database connection error %v", err)
 	}
