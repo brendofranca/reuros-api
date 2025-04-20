@@ -60,6 +60,11 @@ Swagger documentation is available at:
 http://localhost:8080/swagger/
 ```
 
+To generate a new version of the Swagger documentation, run the following command:
+```bash
+swag init -g cmd/server/main.go --output docs
+```
+
 ## Deployment
 
 The project is deployed using the infrastructure provided by [Railway](https://railway.app). You can access the services at the following URLs:

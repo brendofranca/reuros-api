@@ -54,7 +54,7 @@ func (s *CurrencyService) FetchRates(baseCurrency string) (*CurrencyRate, error)
 		return nil, fmt.Errorf("JSON decoding error: %w", err)
 	}
 
-	if rates.Rates == nil || len(rates.Rates) == 0 {
+	if len(rates.Rates) == 0 {
 		return nil, errors.New("error: received empty exchange rates data")
 	}
 
